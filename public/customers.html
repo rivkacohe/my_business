@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: bisque;
+    }
+
+    .header {
+        margin: 0 auto;
+        width: 200px;
+        align-items: center;
+    }
+
+    h3 {
+        color: rgb(3, 93, 109);
+    }
+
+    .wrapper {
+        display: flex;
+        width: 80vw;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: auto;
+    }
+
+    .function {
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(163, 235, 235);
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    input,
+    select,
+    option {
+        border: none;
+        background-color: bisque;
+        border-radius: 10px;
+        margin: 5px;
+        padding: 5px;
+        width: 100%;
+    }
+
+    button,
+    input[type=button] {
+        border: none;
+        background-color: rgb(14, 175, 187);
+        border-radius: 10px;
+        margin: 5px;
+        padding: 5px;
+    }
+
+    .inputID {
+        width: 30px;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <h2>Your Functions:</h2>
+    </div>
+
+    <div class="wrapper">
+        <div class="function">
+            <h3>ADD Business Card</h3>
+            <form method="post" action="/customers/businessCards">
+                <div class="input">
+                    <label for="name">Name</label>
+                    <input type="text" name="name">
+                </div>
+                <div>
+                    <label for="description">Descriiption</label>
+                    <input type="text" name="description">
+                </div>
+                <div>
+                    <label for="customerId">Customer ID</label>
+                    <input type="number" name="customerId">
+                </div>
+                <div>
+                    <label for="adress">Adress</label>
+                    <input type="text" name="adress">
+                </div>
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="text" name="phone">
+                </div>
+                <div>
+                    <label for="img">Image SRC</label>
+                    <input type="text" name="img">
+                </div>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+        <div class="function">
+            <h3>Get Business Detailes</h3>
+
+            <form method="get" action="/customers/businessCards">
+                <label for="id">By Business ID</label>
+                <input class="inputID" type="number" name="id">
+                <button type="submit">Get</button>
+            </form>
+
+            <form method="get" action="/customers/businessCards">
+                <label for="customerId">By Customer ID</label>
+                <input class="inputID" type="number" name="customerId">
+                <button type="submit">Get</button>
+            </form>
+        </div>
+
+        <div class="function">
+            <h3>Edit Business Card</h3>
+
+
+
+            <form id="updateFm">
+                <label for="id">ID to update</label>
+                <input type="number" id="idToUpdate" name="id">
+                <div>
+                    <input type="text" placeholder="Name" name="name">
+                </div>
+                <div>
+                    <input type="text" placeholder="Descriiption" name="description">
+                </div>
+                <div>
+                    <input type="number" placeholder="Customer ID" name="customerId">
+                </div>
+                <div>
+                    <input type="text" placeholder="Adress" name="adress">
+                </div>
+                <div>
+                    <input type="text" placeholder="Phone" name="phone">
+                </div>
+                <div>
+                    <input type="text" placeholder="Image SRC" name="img">
+                </div>
+                <BUtton>Edit</BUtton>
+            </form>
+        </div>
+        <div class="function">
+            <h3>Delete Business Card</h3>
+            <div>
+                <label>ID</label>
+                <input class="inputID" type="number" id="idToDelete">
+            </div>
+            <input type="button" id="btnDelete" value="Delete"></input>
+
+
+
+        </div>
+    </div>
+    <script>
+        //update request
+        const updateFm = document.getElementById('updateFm');
+        updateFm.addEventListener('submit', e => {
+            e.preventDefault();
+            const data = {};
+            new FormData(updateFm).forEach((value, key) =>data[key] = value);
+            console.log(data);
+
+            fetch(`http://localhost:3000/customers/businessCards`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+        })
+
+        //deltet request
+        document.getElementById('btnDelete').addEventListener('click', () => {
+            const idToDelete = document.getElementById('idToDelete').value;
+            deleteProduct(idToDelete);
+        })
+
+        function deleteProduct(id) {
+            return fetch(`http://localhost:3000/customers/businessCards/${id}`, {
+                method: 'DELETE',
+            })
+        }
+    </script>
+</body>
+
+</html>

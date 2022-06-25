@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: bisque;
+        }
+
+        .header {
+            margin: 0 auto;
+            width: 200px;
+            align-items: center;
+        }
+
+        h3 {
+            color: rgb(3, 93, 109);
+        }
+
+        .wrapper {
+            display: flex;
+            width: 80vw;
+            justify-content:center;
+            flex-wrap: wrap;
+            margin: auto;
+        }
+
+        .function {
+            display: flex;
+            flex-direction: column;
+            width: 30%;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(163, 235, 235);
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        input,
+        select,
+        option {
+            border: none;
+            background-color: rgb(163, 235, 235);
+            border-radius: 10px;
+            margin: 5px;
+            padding: 5px;
+            width: 70%;
+           
+        }
+
+        button,
+        input[type=button] {
+            border: none;
+            background-color: rgb(14, 175, 187);
+            border-radius: 10px;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .inputID {
+            width: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="function">
+            <h3>Hello Customer</h3>
+            <div id="details"></div>
+
+            <button id="goFunctionBtn">Go see Your functions</button>
+        </div>
+    </div>
+    <script>
+        const promiseOfCustomerDetails = fetch('http://localhost:3000/customers/customer-card').then(r => r.json()).then(data => {
+            return insertData(data);
+        });
+        function insertData(data) {
+            const getCustomer = [data[0].id, data[0].name, data[0].email, data[0].type]
+            document.getElementById('details').innerHTML += `<div>
+        <label for="">ID</label>
+        <input type="text" value="${getCustomer[0]}" >
+    </div>
+    <div>
+        <label for="">Name</label>
+        <input type="text" value="${getCustomer[1]}">
+    </div>
+    <div>
+        <label for="">Email</label>
+        <input type="text" value="${getCustomer[2]}">
+    </div>
+    <div>
+        <label for="">Type</label>
+        <input type="text" value="${getCustomer[3]}">
+    </div>`
+        }
+        window.onload = async () => {
+            let someData = await promiseOfCustomerDetails;
+        };
+
+        document.getElementById('goFunctionBtn').addEventListener('click', () => {
+            window.location.replace('http://localhost:3000/customers/')
+        })
+
+    </script>
+</body>
+
+</html>
