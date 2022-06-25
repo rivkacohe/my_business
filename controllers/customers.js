@@ -6,7 +6,6 @@ module.exports = {
 
     addBusinesscard: async function (req, res, next) {
     const reqBody = req.body;
-console.log(reqBody);
     const schema = joi.object({
         name: joi.string().required().min(2).max(200),
         description: joi.string().required(),
@@ -93,7 +92,6 @@ getCustomerDetailes: async function (req, res, next){
         customerId: joi.required()
     });
     const { error, value } = schema.validate(req.customer.customerId);
-    console.log(req.customer.customerId);
 
     if (error) {
         res.status(400).send('error get Customer Detailes');
@@ -160,7 +158,6 @@ editBusinesscard: async function (req, res, next){
         img: joi.string().min(5).max(200),
     }).min(1);
 
-    console.log(req.body);
     const { error, value } = schema.validate(reqBody);
 
     if (error) {
@@ -189,7 +186,6 @@ deleteBusinesscard: async function (req, res, next){
     const schema = joi.object({
         id: joi.number().required()
     });
-console.log(req.params);
     const { error, value } = schema.validate(req.params);
 
     if (error) {

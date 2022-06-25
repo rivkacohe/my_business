@@ -164,12 +164,20 @@
         //update request
         const updateFm = document.getElementById('updateFm');
         updateFm.addEventListener('submit', e => {
-            e.preventDefault();
-            const data = {};
-            new FormData(updateFm).forEach((value, key) =>data[key] = value);
-            console.log(data);
+            e.preventDefault()
+            updateBusinessCard(updateFm);
+        })
 
-            fetch(`http://localhost:3000/customers/businessCards`, {
+        //deltet request
+        document.getElementById('btnDelete').addEventListener('click', () => {
+            const idToDelete = document.getElementById('idToDelete').value;
+            deleteBusinessCard(idToDelete);
+        })
+        async function updateBusinessCard(updateFm) {
+            const data = {};
+            new FormData(updateFm).forEach((value, key) => data[key] = value);
+
+            const response = await fetch(`http://localhost:3000/customers/businessCards`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,19 +185,33 @@
                 },
                 body: JSON.stringify(data),
             })
-        })
+            const idToupdateDiv = document.querySelector('#updateFm > div:nth-child(8)');
+            if (response.status === 200) {
+                idToupdateDiv.innerHTML += `<br>business card edited successfully`
+            }
+            else {
+                idToupdateDiv.innerHTML += `<br> failed to edit business card`
+            }
 
-        //deltet request
-        document.getElementById('btnDelete').addEventListener('click', () => {
-            const idToDelete = document.getElementById('idToDelete').value;
-            deleteProduct(idToDelete);
-        })
-
-        function deleteProduct(id) {
-            return fetch(`http://localhost:3000/customers/businessCards/${id}`, {
-                method: 'DELETE',
-            })
         }
+
+        async function deleteBusinessCard(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/customers/businessCards/${id}`, {
+                    method: 'DELETE',
+                });
+                const idToDeleteDiv = document.querySelector('body > div.wrapper > div:nth-child(4) > div');
+                if (response.status === 200) {
+                    idToDeleteDiv.innerHTML += `<br>business card ${id} deleted successfully`
+                }
+                else{
+                    idToDeleteDiv.innerHTML += `<br>failed to delete business card ${id}`
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
     </script>
 </body>
 
