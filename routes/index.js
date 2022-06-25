@@ -3,7 +3,7 @@ var router = express.Router();
 const mwAuth = require('../middleware/auth');
 const auth = require('../controllers/auth');
 const fileMgmt = require('../shared/fileMgmt');
-
+const cm =  require ('../controllers/customers')
 /* authentication */
 router.get('/signin', function (req, res, next) {
   const filePath = fileMgmt.getHtmlFilePath('login.html');
@@ -27,4 +27,6 @@ router.get('/logout', mwAuth, function (req, res, next) {
     .status(200)
     .send('Successfully logged out.');
 })
+//add customer
+router.post('/', cm.addCustomer );
 module.exports = router;

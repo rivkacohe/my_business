@@ -210,6 +210,5 @@ console.log(req.params);
         res.status(400).send('error delete  Business Card');
         console.log(err.message);
     }
-    res.send(`busibess card${req.params.id} deleted successfully`);
 }
 }
