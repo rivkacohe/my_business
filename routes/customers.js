@@ -15,8 +15,7 @@ router.get('/home', function(req, res, next) {
   res.sendFile(filePath );
 });
 
-//add customer
-router.post('/', cm.addCustomer );
+
 //add business card
 router.post('/businessCards', mwAuth, cm.addBusinesscard);
 //get customer detailes
