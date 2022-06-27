@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Cards</title>
+    <link rel="shortcut icon" href="#" />
+</head>
+<style>
+    table {
+        border: 0.1rem;
+        border-style: solid;
+        border-color: black;
+        border-radius: 10px;
+       width: 100%;
+    }
+
+    tr {
+        border: 0.1rem;
+        border-style: solid;
+        border-color: black;
+    }
+
+    th {
+        border-bottom: 3px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        /* margin: auto; */
+    }
+
+    .function {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgb(163, 235, 235);
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        width: 90%;
+
+    }
+
+    input,
+    select,
+    option {
+        border: none;
+        background-color: bisque;
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    button,
+    input[type=button] {
+        border: none;
+        background-color: rgb(14, 175, 187);
+        border-radius: 10px;
+        padding: 5px;
+        margin: 5px;
+    }
+
+    input[type="number"]:disabled {
+        background-color: rgb(163, 235, 235);
+    }
+</style>
+
+<body>
+    <div class="wrapper">
+
+        <div class="function">
+            <div class="function">
+                <h3>Get Business Detailes</h3>
+
+                <form id="getForm" action="/customers/businessCards">
+                    <label for="id">By Business ID</label>
+                    <input class="inputID" type="number" id="idToGet" name="id">
+                    <button type="submit">Get</button>
+                    <br>
+                    <label for="customerId">By Customer ID</label>
+                    <input class="inputID" type="number" id="customerIdToGet" name="customerId">
+                    <button type="submit">Get</button>
+                </form>
+            </div>
+            <h3>customer-cards List</h3>
+            <table>
+                <tr>
+                    <th id="id" class="property">Id</th>
+                    <th id="name" class="property">Name</th>
+                    <th id="description" class="property">Description</th>
+                    <th id="customerId" class="property">Customer Id</th>
+                    <th id="adress" class="property">Adress</th>
+                    <th id="phone" class="property">Phone</th>
+                    <th id="Image" class="property">Image</th>
+                    <th id="functions" class="property">functions</th>
+                </tr>
+                <tr>
+                    <td><input type="number" disabled class="id"></td>
+                    <td><input type="text" class="name"></td>
+                    <td><input type="text" class="description"></td>
+                    <td><input type="number" class="customerId"></td>
+                    <td><input type="text" class="adress"></td>
+                    <td><input type="text" class="phone"></td>
+                    <td><input type="text" class="img"></td>
+                    <td><button id="addBtn">Add Business Card</button></td>
+                </tr>
+            </table>
+            <!-- <form method="get" action="/orders/export">
+                <button type="submit">Export Orders</button>
+            </form> -->
+        </div>
+    </div>
+
+    <script>
+
+        let businessCards = [];
+        let properties = Array.prototype.slice.call(document.getElementsByClassName('property'))
+        let url;
+        let customerCardToUpdate;
+        let addBtn;
+
+        addEvenToAddBtn();
+        addEventListenerToSubmitBtn();
+
+        async function getBusinessCards() {
+            deleteTableRows();
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", url);
+            xhttp.setRequestHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+            xhttp.send();
+            xhttp.onload = function () {
+                myJSON = this.response;
+                businessCards = JSON.parse(myJSON);
+
+                const table = document.querySelector('table');
+                let row1 = table.insertRow(1);
+                row1.innerHTML =
+                    '<tr><td><input type="number" disabled class="id"></td>' +
+                    '<td><input type="text" class="name"></td>' +
+                    '<td><input type="text" class="description"></td>' +
+                    '<td><input type="number" class="customerId"></td>' +
+                    '<td><input type="text" class="adress"></td>' +
+                    '<td><input type="text" class="phone"></td>' +
+                    '<td><input type="text" class="img"></td>' +
+                    '<td><input type="button" value="Add Business Card" id="addBtn"></td>' +
+                    '</tr>';
+
+                addEvenToAddBtn();
+
+                businessCards.forEach(businessCard => {
+
+                    // Create an empty <tr> element and add it to the 1st position of the table:
+
+                    let row2 = table.insertRow(2);
+
+                    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+                    let id = row2.insertCell(0);
+                    let name = row2.insertCell(1);
+                    let description = row2.insertCell(2);
+                    let customerId = row2.insertCell(3);
+                    let adress = row2.insertCell(4);
+                    let phone = row2.insertCell(5);
+                    let img = row2.insertCell(6);
+                    let functions = row2.insertCell(7);
+
+                    // Add some text to the new cells:
+                    id.innerHTML = `<input type="number" value="${businessCard.id}" class="id">`;
+                    name.innerHTML = `<input type="text" value="${businessCard.name}" class="name">`;
+                    description.innerHTML = `<input type="text" value="${businessCard.description}" class="description">`;
+                    customerId.innerHTML = `<input type="number" value="${businessCard.customerId}" class="customerId">`;
+                    adress.innerHTML = `<input type="text" value="${businessCard.adress}" class="adress">`;
+                    phone.innerHTML = `<input type="text" value="${businessCard.phone}" class="phone">`;
+                    img.innerHTML = `<input type="text" value="${businessCard.img}" class="img">`;
+                    functions.innerHTML = `<input type="button" value="Edit" class="editBtn"><input type="button" value="Delete" class="dltBtn">`;
+                });
+
+                //intialize buttons
+                addEditButtonsEvents();
+                addDeleteButtonsEvents();
+            }
+        }
+
+        function setUrl() {
+            const idToGet = document.getElementById('idToGet').value;
+            const customerIdToGet = document.getElementById('customerIdToGet').value;
+            if (idToGet === '') {
+                if (customerIdToGet === '') {
+                    alert('no identifier was sent');
+                    return;
+                }
+                else {
+                    url = `http://localhost:3000/customers/businessCards?customerId=${Number(customerIdToGet)}`;
+                }
+            }
+            else {
+                url = `http://localhost:3000/customers/businessCards?id=${Number(idToGet)}`;
+            }
+        }
+
+
+        function createCustomerCardObj(btn) {
+            const tr = btn.parentElement.parentElement;
+            const name = tr.querySelector('.name').value;
+            const description = tr.querySelector('.description').value;
+            const customerId = tr.querySelector('.customerId').value;
+            const adress = tr.querySelector('.adress').value;
+            const phone = tr.querySelector('.phone').value;
+            const img = tr.querySelector('.img').value;
+
+            //set to obj
+
+            return customerCardObj = {
+                name: name,
+                description: description,
+                customerId: customerId,
+                adress: adress,
+                phone: phone,
+                img: img
+            }
+        }
+
+        function deleteTableRows() {
+            const rows = document.getElementsByTagName('tr');
+            for (let i = rows.length - 1; i >= 1; i--) {
+                rows[i].remove();
+            }
+        }
+
+        async function addBusinessCard(customerCardObj) {
+            const response = await fetch(`http://localhost:3000/customers/businessCards`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(customerCardObj),
+            })
+            if (response.status === 200) {
+                alert('business card added successfully')
+            }
+        }
+
+        async function updatebusinessCard(customerCardToUpdate) {
+            const response = await fetch(`http://localhost:3000/customers/businessCards`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(customerCardToUpdate),
+            })
+            if (response.status === 200) {
+                alert('business card edited successfully')
+            }
+        }
+
+        async function deleteBusinessCard(id) {
+            const response = await fetch(`http://localhost:3000/customers/businessCards/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.status === 200) {
+                alert(`business card ${id} deleted successfully`);
+            }
+        }
+
+
+        function addEvenToAddBtn() {
+            addBtn = document.getElementById('addBtn');
+            addBtn.addEventListener('click', () => {
+                addBusinessCard(createCustomerCardObj(addBtn))
+                    .then(result => {
+                        if (document.querySelectorAll('tr').length >2){
+                            getBusinessCards()}
+                        else{
+                            document.querySelector("tbody").childNodes[2].querySelectorAll('td>input').forEach(td=>{
+                            td.value=''});
+                        }
+                    })});
+        }
+
+        function addEditButtonsEvents() {
+            document.querySelectorAll('input.editBtn').forEach(btn => {
+
+                btn.addEventListener('click', () => {
+                    //get client data
+                    const tr = btn.parentElement.parentElement;
+                    const id = tr.querySelector('.id').value;
+                    const name = tr.querySelector('.name').value;
+                    const description = tr.querySelector('.description').value;
+                    const customerId = tr.querySelector('.customerId').value;
+                    const adress = tr.querySelector('.adress').value;
+                    const phone = tr.querySelector('.phone').value;
+                    const img = tr.querySelector('.img').value;
+
+                    //set to obj
+                    customerCardToUpdate = {
+                        id: id,
+                        name: name,
+                        description: description,
+                        customerId: customerId,
+                        adress: adress,
+                        phone: phone,
+                        img: img
+                    }
+
+                    updatebusinessCard(customerCardToUpdate);
+                })
+            });
+        }
+
+        function addDeleteButtonsEvents() {
+            document.querySelectorAll('input.dltBtn').forEach(btn => {
+
+                btn.addEventListener('click', () => {
+                    //get client data
+
+                    const tr = btn.parentElement.parentElement;
+                    const id = tr.querySelector('.id').value;
+                    deleteBusinessCard(id).then(result =>
+                        getBusinessCards()
+                    );
+                })
+            })
+        };
+
+        function addEventListenerToSubmitBtn() {
+            const getForm = document.getElementById('getForm');
+            getForm.addEventListener('submit', e => {
+                e.preventDefault()
+                setUrl();
+                getBusinessCards();
+            })
+        }
+    </script>
+</body>
+
+</html>

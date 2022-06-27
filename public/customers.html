@@ -173,6 +173,8 @@
             const idToDelete = document.getElementById('idToDelete').value;
             deleteBusinessCard(idToDelete);
         })
+
+        
         async function updateBusinessCard(updateFm) {
             const data = {};
             new FormData(updateFm).forEach((value, key) => data[key] = value);

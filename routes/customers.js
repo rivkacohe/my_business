@@ -6,7 +6,7 @@ const fileMgmt = require('../shared/fileMgmt');
 
 
 router.get('/', function(req, res, next) {
-  const filePath = fileMgmt.getHtmlFilePath('customers.html');
+  const filePath = fileMgmt.getHtmlFilePath('customer-funcs.html');
   res.sendFile(filePath );
 });
 
@@ -14,6 +14,12 @@ router.get('/home', function(req, res, next) {
   const filePath = fileMgmt.getHtmlFilePath('customer-card.html');
   res.sendFile(filePath );
 });
+ 
+router.get('/home1', function(req, res, next) {
+  const filePath = fileMgmt.getHtmlFilePath('customers.html');
+  res.sendFile(filePath );
+});
+
 
 
 //add business card
