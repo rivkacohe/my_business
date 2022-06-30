@@ -8,17 +8,18 @@ module.exports = {
     const reqBody = req.body;
     const schema = joi.object({
         name: joi.string().required().min(2).max(200),
-        description: joi.string().required(),
-        customerId: joi.number().required(),
-        adress: joi.string().required(),
-        phone: joi.string().required(),
+        description: joi.string().required().min(1),
+        customerId: joi.number().required().min(1),
+        adress: joi.string().required().min(1),
+        phone: joi.string().required().min(1),
         img: joi.string().allow(null).allow(''),
     });
 
+    
     const { error, value } = schema.validate(reqBody);
 
     if (error) {
-        res.send(`error adding Business Card: ${error}`);
+        res.status(400).send(`error adding Business Card: ${error}`);
         return;
     }
 

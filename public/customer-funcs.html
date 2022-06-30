@@ -11,9 +11,10 @@
     table {
         border: 0.1rem;
         border-style: solid;
-        border-color: black;
+        border-color: rgb(172, 172, 172);
         border-radius: 10px;
-       width: 100%;
+        padding: 20px;
+        width: 100%;
     }
 
     tr {
@@ -23,13 +24,15 @@
     }
 
     th {
-        border-bottom: 3px solid black;
+        border-bottom: 3px solid rgb(172, 172, 172);
+        ;
         padding: 5px;
         text-align: center;
     }
 
     td {
         text-align: center;
+        width: fit-content;
     }
 
     .wrapper {
@@ -45,7 +48,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: rgb(163, 235, 235);
+        /* background-color: rgb(163, 235, 235); */
         margin: 10px;
         padding: 10px;
         border-radius: 10px;
@@ -57,23 +60,25 @@
     select,
     option {
         border: none;
-        background-color: bisque;
-        border-radius: 10px;
+        background-color: rgb(250, 248, 246);
+        border-radius: 5px;
         padding: 5px;
-        margin: 5px;
+        text-align: center;
+        width: fit-content;
+        margin: 0;
+
     }
 
     button,
     input[type=button] {
         border: none;
-        background-color: rgb(14, 175, 187);
-        border-radius: 10px;
+        background-color: rgb(146, 184, 187);
+        border-radius: 5px;
         padding: 5px;
-        margin: 5px;
     }
 
     input[type="number"]:disabled {
-        background-color: rgb(163, 235, 235);
+        background-color: none;
     }
 </style>
 
@@ -87,7 +92,6 @@
                 <form id="getForm" action="/customers/businessCards">
                     <label for="id">By Business ID</label>
                     <input class="inputID" type="number" id="idToGet" name="id">
-                    <button type="submit">Get</button>
                     <br>
                     <label for="customerId">By Customer ID</label>
                     <input class="inputID" type="number" id="customerIdToGet" name="customerId">
@@ -192,21 +196,9 @@
             }
         }
 
-        function setUrl() {
-            const idToGet = document.getElementById('idToGet').value;
-            const customerIdToGet = document.getElementById('customerIdToGet').value;
-            if (idToGet === '') {
-                if (customerIdToGet === '') {
-                    alert('no identifier was sent');
-                    return;
-                }
-                else {
-                    url = `http://localhost:3000/customers/businessCards?customerId=${Number(customerIdToGet)}`;
-                }
-            }
-            else {
-                url = `http://localhost:3000/customers/businessCards?id=${Number(idToGet)}`;
-            }
+        function setUrl(customerIdToGet) {
+
+
         }
 
 
@@ -239,6 +231,7 @@
         }
 
         async function addBusinessCard(customerCardObj) {
+            console.log(customerCardObj)
             const response = await fetch(`http://localhost:3000/customers/businessCards`, {
                 method: 'post',
                 headers: {
@@ -246,7 +239,8 @@
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify(customerCardObj),
-            })
+            } );
+            console.log(response);
             if (response.status === 200) {
                 alert('business card added successfully')
             }
@@ -281,13 +275,16 @@
             addBtn.addEventListener('click', () => {
                 addBusinessCard(createCustomerCardObj(addBtn))
                     .then(result => {
-                        if (document.querySelectorAll('tr').length >2){
-                            getBusinessCards()}
-                        else{
-                            document.querySelector("tbody").childNodes[2].querySelectorAll('td>input').forEach(td=>{
-                            td.value=''});
+                        if (document.querySelectorAll('tr').length > 2) {
+                            getBusinessCards()
                         }
-                    })});
+                        else {
+                            document.querySelector("tbody").childNodes[2].querySelectorAll('td>input').forEach(td => {
+                                td.value = ''
+                            });
+                        }
+                    })
+            });
         }
 
         function addEditButtonsEvents() {
@@ -335,11 +332,38 @@
             })
         };
 
+
+        function setUrl(idToGet, customerIdToGet) {
+            url = `http://localhost:3000/customers/businessCards`;
+
+            if (customerIdToGet !== "") {
+                url += `?customerId=${Number(customerIdToGet)}`;
+            }
+
+            if (idToGet !== "") {
+
+                if (customerIdToGet === "") {
+                    url += `?`;
+                }
+                else {
+                    url += `&`;
+                }
+
+                url += `id=${Number(idToGet)}`;
+            }
+        }
         function addEventListenerToSubmitBtn() {
             const getForm = document.getElementById('getForm');
             getForm.addEventListener('submit', e => {
                 e.preventDefault()
-                setUrl();
+                const idToGet = document.getElementById('idToGet').value;
+                const customerIdToGet = document.getElementById('customerIdToGet').value;
+
+                if (idToGet === "" && customerIdToGet === "") {
+                    return alert("set filter")
+                }
+
+                setUrl(idToGet, customerIdToGet);
                 getBusinessCards();
             })
         }
